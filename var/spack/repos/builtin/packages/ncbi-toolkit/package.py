@@ -14,11 +14,8 @@ class NcbiToolkit(AutotoolsPackage):
     homepage = "https://www.ncbi.nlm.nih.gov/IEB/ToolBox/CPP_DOC/"
     url      = "ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools++/CURRENT/ncbi_cxx--22_0_0.tar.gz"
 
-    version('22_0_0', 'e352d25b24c3a2d087c2cf3cedf6ea95',
-            url='ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools++/ARCHIVE/2019/Mar_28_2019/ncbi_cxx--22_0_0.tar.gz')
-    version('21_0_0', '14e021e08b1a78ac9cde98d0cab92098',
-            url='ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools++/ARCHIVE/2018/Apr_2_2018/ncbi_cxx--21_0_0.tar.gz')
-
+    version('22.0.0', 'e352d25b24c3a2d087c2cf3cedf6ea95')
+    version('21.0.0', '14e021e08b1a78ac9cde98d0cab92098')
     variant('debug', default=False,
             description='Build debug versions of libs and apps')
 
@@ -36,6 +33,22 @@ class NcbiToolkit(AutotoolsPackage):
     depends_on('zlib')
     depends_on('samtools')
     depends_on('bamtools')
+
+    def url_for_version(self, version):
+        version_date = {
+            Version('22.0.0'): 'Mar_28_2019',
+            Version('21.0.0'): 'Apr_2_2018',
+        }
+        ftp = 'ftp://ftp.ncbi.nih.gov/toolbox/ncbi_tools++/'
+        if version in version_date.keys():
+            date = version_date[version]
+            year = date[-4:]
+            return ftp + ('ARCHIVE/{0}/{1}/ncbi_cxx--{2}.tar.gz'
+                          .format(year, date, version.underscored))
+        else:
+            # Assume the unknown version is the current release.
+            return ftp + ('CURRENT/ncbi_cxx--{0}.tar.gz'
+                          .format(version.underscored))
 
     def configure_args(self):
         args = ['--without-sybase', '--without-fastcgi']
