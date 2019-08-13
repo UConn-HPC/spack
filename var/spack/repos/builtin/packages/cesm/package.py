@@ -6,7 +6,7 @@
 from spack import *
 
 
-class Cesm(CMakePackage):
+class Cesm(Package):
     """Community Earth System Model."""
 
     homepage = 'http://www.cesm.ucar.edu/'
@@ -23,7 +23,6 @@ class Cesm(CMakePackage):
     variant('esmf', default=False)
     variant('trilinos', default=False)
 
-    depends_on('cmake@2.8.6:', type='build')
     depends_on('subversion', type='build')
 
     depends_on('lapack')
@@ -40,17 +39,10 @@ class Cesm(CMakePackage):
     depends_on('netcdf-fortran@4.3:', when='@2:')
     depends_on('trinilinos', when='+trilinos')
 
-    root_cmakelists_dir = 'cime'
-    phases = ['bootstrap', 'cmake', 'build', 'install']
-
-    def bootstrap(self, spec, prefix):
+    def patch(self):
         bootstrap = Executable('./manage_externals/checkout_externals')
         bootstrap()
 
-    def cmake_args(self):
-        args = [
-            '-DNETCDF_C={0}'.format(self.spec['netcdf'].prefix),
-            '-DNETCDF_FORTRAN={0}'.format(self.spec['netcdf-fortran'].prefix),
-            # TODO: Set Intel fortran compiler for f95?
-        ]
-        return args
+    def install(self, spec, prefix):
+        force_symlink('cime/scripts', 'bin')
+        install_tree('.', prefix)
