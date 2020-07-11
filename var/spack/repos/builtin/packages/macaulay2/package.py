@@ -25,8 +25,8 @@ class Macaulay2(AutotoolsPackage):
     # depends_on('libtool',  type='build')
     # depends_on('m4',       type='build')
 
-    depends_on('eigen')
     depends_on('boost')
+    depends_on('eigen')
     depends_on('libatomic-ops')
 
     @property
