@@ -27,6 +27,7 @@ class Macaulay2(AutotoolsPackage):
 
     depends_on('eigen')
     depends_on('boost')
+    depends_on('libatomic-ops')
 
     @property
     def configure_directory(self):
