@@ -28,6 +28,7 @@ class Macaulay2(AutotoolsPackage):
     depends_on('bdw-gc')
     depends_on('boost')
     depends_on('eigen')
+    depends_on('flint')
     depends_on('gdbm')
     depends_on('mpfr')
     depends_on('ntl')
